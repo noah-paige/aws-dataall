@@ -464,6 +464,10 @@ class Dataset(Stack):
                     'CreateTableDefaultPermissions': [],
                 },
                 'DatabaseAdministrators': dataset_admins,
+                'LFTags':{
+                    "TagKey": dataset.lfTagKey, 
+                    "TagValue": dataset.lfTagValue
+                } if dataset.lfTagKey else None
             },
         )
 

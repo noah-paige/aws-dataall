@@ -10,20 +10,22 @@ import {
 } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { BlockOutlined, CheckCircleOutlined } from '@mui/icons-material';
+import { useNavigate } from 'react-router';
 import { LoadingButton } from '@mui/lab';
+import { CheckCircleOutlined, BlockOutlined } from '@mui/icons-material';
 import { useSnackbar } from 'notistack';
 import { useState } from 'react';
 import ShareStatus from '../../components/ShareStatus';
 import TextAvatar from '../../components/TextAvatar';
 import { useDispatch } from '../../store';
 import useClient from '../../hooks/useClient';
-import approveShareObject from '../../api/ShareObject/approveShareObject';
 import { SET_ERROR } from '../../store/errorReducer';
-import rejectShareObject from '../../api/ShareObject/rejectShareObject';
+import approveLFTagShareObject from '../../api/ShareObject/approveLFTagShareObject';
+import rejectLFTagShareObject from '../../api/ShareObject/rejectLFTagShareObject';
 import useCardStyle from '../../hooks/useCardStyle';
 
-const ShareInboxListItem = (props) => {
+
+const ShareInboxListLFTagItem = (props) => {
   const { share, reload } = props;
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
@@ -31,11 +33,12 @@ const ShareInboxListItem = (props) => {
   const classes = useCardStyle();
   const [accepting, setAccepting] = useState(false);
   const [rejecting, setRejecting] = useState(false);
+  
   const accept = async () => {
     setAccepting(true);
     const response = await client.mutate(
-      approveShareObject({
-        shareUri: share.shareUri
+      approveLFTagShareObject({
+        lftagShareUri: share.lftagShareUri
       })
     );
     if (!response.errors) {
@@ -56,8 +59,8 @@ const ShareInboxListItem = (props) => {
   const reject = async () => {
     setRejecting(true);
     const response = await client.mutate(
-      rejectShareObject({
-        shareUri: share.shareUri
+      rejectLFTagShareObject({
+        lftagShareUri: share.lftagShareUri
       })
     );
     if (!response.errors) {
@@ -77,7 +80,7 @@ const ShareInboxListItem = (props) => {
 
   return (
     <Card
-      key={share.shareUri}
+      key={share.lftagShareUri}
       className={classes.card}
       sx={{
         mt: 2
@@ -113,9 +116,9 @@ const ShareInboxListItem = (props) => {
                     component={RouterLink}
                     color="textPrimary"
                     variant="subtitle2"
-                    to={`/console/datasets/${share.dataset.datasetUri}`}
+                    to={`/console/shares/lftag/${share.lftagShareUri}`}
                   >
-                    {share.dataset.datasetName}
+                    {share.lfTagKey}
                   </Link>{' '}
                   | {share.created}
                 </Typography>
@@ -134,7 +137,8 @@ const ShareInboxListItem = (props) => {
             }}
           >
             <Typography color="textSecondary" variant="body1">
-              {`Read access to Dataset: ${share.dataset.datasetName} 
+              {`Read access to LF Tag Key: ${share.lfTagKey} 
+                and LF Tag Value:  ${share.lfTagValue} 
                 for the Principal: ${share.principal.principalName} 
                 from Environment: ${share.principal.environmentName}`}
             </Typography>
@@ -203,7 +207,7 @@ const ShareInboxListItem = (props) => {
           <Button
             color="primary"
             component={RouterLink}
-            to={`/console/shares/${share.shareUri}`}
+            to={`/console/shares/lftag/${share.lftagShareUri}`}
           >
             Learn More
           </Button>
@@ -212,8 +216,8 @@ const ShareInboxListItem = (props) => {
     </Card>
   );
 };
-ShareInboxListItem.propTypes = {
+ShareInboxListLFTagItem.propTypes = {
   share: PropTypes.object.isRequired,
   reload: PropTypes.func.isRequired
 };
-export default ShareInboxListItem;
+export default ShareInboxListLFTagItem;

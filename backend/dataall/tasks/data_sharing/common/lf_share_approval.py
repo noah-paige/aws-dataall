@@ -23,7 +23,7 @@ class LFShareApproval:
         shared_tables: [models.DatasetTable],
         source_environment: models.Environment,
         target_environment: models.Environment,
-        env_group: models.EnvironmentGroup,
+        env_group: models.EnvironmentGroup = None,
     ):
         self.session = session
         self.env_group = env_group

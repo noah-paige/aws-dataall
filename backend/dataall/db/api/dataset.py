@@ -247,6 +247,16 @@ class Dataset:
                 models.ShareObject,
                 models.ShareObject.datasetUri == models.Dataset.datasetUri,
             )
+            .outerjoin(
+                models.LFTagShareObject,
+                and_(
+                    models.Dataset.lfTagKey.contains(f'{{{models.LFTagShareObject.lfTagKey}}}'),
+                    models.Dataset.lfTagValue.contains(f'{{{models.LFTagShareObject.lfTagValue}}}')
+                )
+                # models.LFTagShareObject.lfTagKey== any(models.Dataset.lfTagKey),
+                # models.LFTagShareObject.lfTagValue == any(models.Dataset.lfTagValue),
+                
+            )
             .filter(
                 or_(
                     models.Dataset.owner == username,
@@ -260,6 +270,14 @@ class Dataset:
                         models.ShareObject.owner == username,
                         models.ShareObject.status == 'Approved',
                     ),
+                    and_(
+                        models.LFTagShareObject.principalId.in_(groups),
+                        models.LFTagShareObject.status == 'Approved'
+                    ),
+                    and_(
+                        models.LFTagShareObject.owner == username,
+                        models.LFTagShareObject.status == 'Approved'
+                    )
                 )
             )
         )

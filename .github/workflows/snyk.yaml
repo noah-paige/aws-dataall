@@ -23,7 +23,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install All Requirements
-        run: make install
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          make install
+          echo PATH=$PATH >> $GITHUB_ENV
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/python-3.9@master
         env:

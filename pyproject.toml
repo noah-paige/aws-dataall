@@ -1,3 +1,7 @@
+[virtualenvs]
+create = false  # Prevents venv creation
+in-project = false  # Optional, but recommended when create = false
+
 [tool.ruff]
 line-length = 120
 src = ["backend", "deploy"]

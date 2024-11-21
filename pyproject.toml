@@ -1,13 +1,3 @@
-[tool.poetry]
-name = "data.all"
-version = "2.6.1"
-description = "data.all"
-package-mode = false
-
-[virtualenvs]
-create = false  # Prevents venv creation
-in-project = false  # Optional, but recommended when create = false
-
 [tool.ruff]
 line-length = 120
 src = ["backend", "deploy"]
